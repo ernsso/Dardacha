@@ -35,6 +35,11 @@ io.sockets.on('connection', function (socket) {
 			socket.emit('loginSuccess', {success:true, redirectUrl:'../Client/home.html'});
         }
 	});
+	
+	socket.on('signup',function(user){
+		user = encodeHtmlSpecialChar(user);
+		console.log(user);
+	});
 });
 
 server.listen(8080);
@@ -147,4 +152,28 @@ function Authentification( _username, _password)
         // Connect to the database
         connect_database(db_connected);
     }
+}
+
+function addUser(){
+
+    var MongoClient = require('mongodb').MongoClient;
+	// Set our collection
+	var collection = db.get('usercollection');
+
+	// Submit to the DB
+	collection.insert({
+		"username" : userName,
+		"email" : userEmail
+	}, function (err, doc) {
+		if (err) {
+			// If it failed, return error
+			res.send("There was a problem adding the information to the database.");
+		}
+		else {
+			// If it worked, set the header so the address bar doesn't still say /adduser
+			res.location("userlist");
+			// And forward to success page
+			res.redirect("userlist");
+		}
+	});
 }
