@@ -27,6 +27,14 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('login',function(user){
 		console.log(user);
+
+        //-------- ------Requette BD
+
+
+        //-------------------------------
+
+
+
 	});
 });
 
