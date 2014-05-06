@@ -1,0 +1,13 @@
+{
+    "name": "Dardacha",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "~3.3.4",
+        "socket.io": "~1.0.0",
+        "ent": "~2.0.0",
+        "mongodb": "~1.4.3",
+        "monk": "~0.8.1"
+    },
+    "author": "Jean-Ernsso <ernsso@truc.com>",
+    "description": "Un chat temps réel avec socket.io et mongodb"
+}
