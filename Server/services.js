@@ -1,17 +1,18 @@
 /**
+ * Created by server-pc on 07/05/14.
+ */
+/**
  * Created by server-pc on 06/05/14.
  */
 //function GetTable()
 
- function Authentification( _username, _password)
-{
-
 
 var MongoClient = require('mongodb').MongoClient;
 
-// Call our 'run_query' function to find all documents in the
-// 'users' collection with a field 'age' greater than 30.
-run_query('users',{ 'username' : {$eq: _username},'password':{$eq:_password}});
+exports.Authentification=function (_username,_password)
+{
+    run_query('users',{ 'username' : {$eq: _username},'password':{$eq:_password}});
+}
 
 // Function used to connect to the MongoDB database
 function connect_database(next) {
@@ -49,7 +50,6 @@ function connect_collection(db, collection_name,next_step) {
     db.collection(collection_name,col_connected);
 };
 
-// Function used to connect to the database, select a collection,
 // run the query, and output the results to the console.
 function run_query(collection_name, query_object) {
     var database;
@@ -58,13 +58,14 @@ function run_query(collection_name, query_object) {
         if(!err) {
 
             if(doc) {
-                console.log("Result:");
-                console.dir(doc);
+                console.log("Connexion OK:");
+              //  console.dir(doc);
                 console.log("------------------");
                 database.close();
                 return true;
             } else {
                 // Close our database connection
+                console.log("Connexion failed:");
                 database.close();
             }
         } else {
@@ -99,7 +100,8 @@ function run_query(collection_name, query_object) {
     }
 
     // Result from database connection request
-    var db_connected = function(err,db) {
+    var db_connected = function(err,db)
+    {
         if(!err) {
             database = db;
             // Connect the collection we are using
@@ -111,4 +113,9 @@ function run_query(collection_name, query_object) {
     // Connect to the database
     connect_database(db_connected);
 }
-}
+
+
+// Function Authentification
+
+
+
