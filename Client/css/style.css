@@ -270,3 +270,10 @@ form:after {
     width: 85%;
     height: 300px;
 }
+#container  #conver
+{
+    height:300pt;
+    overflow:auto;
+    text-align: left;
+    border : solid 2px #ff0000;
+}

@@ -9,19 +9,38 @@
 		<link rel="stylesheet" href="css/style.css">
 	</head>
 	<body>
-		<!-- Begin Page Content -->
+    <div style="float:left;width:100px;border-right:1px solid black;height:300pt;padding:10px;overflow:scroll-y;">
+        <h3>Mombers</h3>
+        <div id="member"></div>
+    </div>
+
 		<div class="container">
 			<section id="content">
-				<form action="" method="POST" id="chatform">
-					<h1>Bonjour TOTO</h1>
-					<div >
-						<textarea id="chatarea" readonly></textarea>
+				<form action=""  id="chatform">
+					<h1>Bonjour :<label id="tagName">esgi</label></h1>
+					<div id="conversation" style="height:300pt;overflow:auto;text-align: left;border : solid 2px #ff0000">
+
+					<!--	<textarea id="chatarea" readonly></textarea>-->
 					</div>
+                   <h1></h1>
 					<div>
-						<input type="text" placeholder="your message" required="" id="typing" />
+
+                       <div>
+                           <input type="text" placeholder="your message" required="" id="message" />
+
+                       </div>
+
+
 					</div>
-				</form><!-- form -->
-			</section><!-- content -->
-		</div><!-- container -->
+
+
+				</form>
+			</section>
+		</div>
+
+
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="http://localhost:8080/socket.io/socket.io.js"></script>
+        <script src="js/client.js"></script>
 	</body>
 </html>

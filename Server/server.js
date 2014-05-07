@@ -26,21 +26,24 @@ var io = require('socket.io').listen(server);
 
 // Quand on client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
-    console.log('Un client est connecté !');
+    console.log('Serveur en ecoute....');
 	//socket.emit('message', 'Vous êtes bien connecté !');
 	
 	socket.on('login',function(user){
-		//console.log(user);
-
-        //-------- ------Requette BD
-
+        console.log('Un client est connecté !');
+        io.sockets.emit('getmembers', user.username);
         DB.Authentification(user.username,user.password);
 
-   //  -----------------------------
-
-
-
 	});
+
+    socket.on('Packet',function(PackClient){
+        console.log('Un client envoie un message !')
+        console.log(PackClient);
+        // we tell the client to execute 'updatechat' with 2 parameters
+        io.sockets.emit('updatechat', PackClient.ID, PackClient.message);
+
+
+    });
 	
 	socket.on('signup',function(user){
 		user = encodeHtmlSpecialChar(user);
