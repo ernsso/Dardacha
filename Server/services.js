@@ -5,7 +5,10 @@
 var MongoClient = require('mongodb').MongoClient;
 
 exports.Authentification=function (_username,_password) {
-    run_query('users',{ 'username' : {$eq: _username},'password':{$eq:_password}});
+    var result = select('users',{ 'username' : {$eq: _username},'password':{$eq:_password}});
+	if(null != result)
+		return true;
+	return false;
 }
 
 exports.insertUser = function(_firstname, _lastname, _email, _username, _password){
@@ -48,65 +51,19 @@ function connect_collection(db, collection_name, next_step) {
 };
 
 // run the query, and output the results to the console.
-function run_query(collection_name, query_object) {
-    var database;
-    // Called for each document in the collection
-    var each_document = function(err, doc) {
-        if(!err) {
-
-            if(doc) {
-                console.log("Connexion OK:");
-              //  console.dir(doc);
-                console.log("------------------");
-                database.close();
-             //   return true;
-            } else {
-                // Close our database connection
-                console.log("Connexion failed:");
-                database.close();
-            }
-        } else {
-            database.close();
-            return false;
-            console.log("Error getting document. " + err.message);
-        }
-    };
-
-    // Result after executing "find"
-    var receive_cursor = function(err, cursor) {
-        if(!err) {
-            console.log("------------------");
-            // Call the "each" function to specify that the
-            // "each_document" function should be called for
-            // every document in the result set
-            cursor.each(each_document);
-        } else {
-            console.log("Error reading database results. " + err.message);
-        }
-    };
-
-    // Result from collection object request
-    var col_connected = function(err, collection) {
-        if(!err) {
-            // Call the "find" function of the collection object
-            // which performs a query and returns the cursor
-            // to the "receive_cursor" function
-            collection.find(query_object,receive_cursor);
-        }
-    }
-
-    // Result from database connection request
-    var db_connected = function(err,db)
-    {
-        if(!err) {
-            database = db;
-            // Connect the collection we are using
-            connect_collection(database, collection_name, col_connected);
-        }
-    }
-
-    // Connect to the database
-    connect_database(db_connected);
+function select(collectionName, data) {
+	var result = null;
+	var dbUrl = 'mongodb://'+global.config.mongo.host+':'+global.config.mongo.port+'/'+global.config.mongo.db;
+	MongoClient.connect(dbUrl, function(err, db){
+		if(err){
+			console.log('Connexion to \''+dbUrl+'\' has fail.');
+			console.log(err);
+		}
+		else{
+			result = db.collection(collectionName).find({'username':data.username}).toArray();
+		}
+	});
+	return result;
 }
 
 function insert(collectionName, data){

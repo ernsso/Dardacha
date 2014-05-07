@@ -32,10 +32,9 @@ io.sockets.on('connection', function (socket) {
 	//socket.emit('message', 'Vous êtes bien connecté !');
 	
 	socket.on('login',function(user){
-		//console.log(user);
-        //-------- ------Requette BD
-        DB.Authentification(user.username,user.password);
-		//  -----------------------------
+        var success = DB.Authentification(user.username,user.password);
+		console.log(success?'Authentification success':'Authentification fail');
+		socket.emit('loginSuccess', success);
 	});
 	
 	socket.on('signup',function(user){

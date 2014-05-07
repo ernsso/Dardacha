@@ -11,6 +11,11 @@ $('#loginform').submit(function(event){
 	});
 });
 
+socket.on('loginSuccess',function(success){
+	if(success)
+		window.location.href = 'home.html';
+});
+
 $('#signupform').submit(function(event){
 	event.preventDefault();
 	socket.emit('signup',{
