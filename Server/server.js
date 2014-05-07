@@ -8,6 +8,8 @@
  */
 var http = require('http');
 var fs = require('fs');
+var ent = require('ent');
+global.config = require('./config.js');
 var DB=require('./services.js');
 
 //-- Importation mongoDB
@@ -31,24 +33,22 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('login',function(user){
 		//console.log(user);
-
         //-------- ------Requette BD
-
         DB.Authentification(user.username,user.password);
-
-   //  -----------------------------
-
-
-
+		//  -----------------------------
 	});
 	
 	socket.on('signup',function(user){
 		user = encodeHtmlSpecialChar(user);
+		DB.insertUser(user.firstname, user.lastname, user.email, user.username, user.password);
 		console.log(user);
 	});
 });
 
 server.listen(8080);
 
-
-
+function encodeHtmlSpecialChar(object){
+	for(var property in object)
+		object[property] = ent.encode(object[property]);
+	return object;
+}

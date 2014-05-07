@@ -1,7 +1,7 @@
 var config = {
 	mongo:{
 		host:'localhost',
-		port:8080,
+		port:27017,
 		db:'dardacha'
 	}
 };
