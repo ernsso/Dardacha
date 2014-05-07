@@ -1,17 +1,15 @@
 /**
  * Created by server-pc on 07/05/14.
  */
-/**
- * Created by server-pc on 06/05/14.
- */
-//function GetTable()
-
 
 var MongoClient = require('mongodb').MongoClient;
 
-exports.Authentification=function (_username,_password)
-{
+exports.Authentification=function (_username,_password) {
     run_query('users',{ 'username' : {$eq: _username},'password':{$eq:_password}});
+}
+
+exports.insertUser = function(_firstname, _lastname, _email, _username, _password){
+	insert('users', {nom:_lastname, prenom:_firstname, email:_email, username:_username, password:_password});
 }
 
 // Function used to connect to the MongoDB database
@@ -23,18 +21,17 @@ function connect_database(next) {
             // Call the callback with the new DB object
             next(null,db);
         } else {
-            console.log("DB connection failed. Details: "
-                + err.message);
+            console.log("DB connection failed. Details: " + err.message);
             next(err);
         }
     };
 
-    var mongo_url = "mongodb://localhost:27017/Dardacha";
+    var mongo_url = "mongodb://localhost:27017/dardacha";
     db_cli.connect(mongo_url,connection_result);
 };
 
 // Function used to get a collection object
-function connect_collection(db, collection_name,next_step) {
+function connect_collection(db, collection_name, next_step) {
     var col_connected = function(err,collection) {
         if(!err) {
             next_step(null, collection);
@@ -62,7 +59,7 @@ function run_query(collection_name, query_object) {
               //  console.dir(doc);
                 console.log("------------------");
                 database.close();
-                return true;
+             //   return true;
             } else {
                 // Close our database connection
                 console.log("Connexion failed:");
@@ -84,8 +81,7 @@ function run_query(collection_name, query_object) {
             // every document in the result set
             cursor.each(each_document);
         } else {
-            console.log("Error reading database results. "
-                + err.message);
+            console.log("Error reading database results. " + err.message);
         }
     };
 
@@ -105,8 +101,7 @@ function run_query(collection_name, query_object) {
         if(!err) {
             database = db;
             // Connect the collection we are using
-            connect_collection(database, collection_name,
-                col_connected);
+            connect_collection(database, collection_name, col_connected);
         }
     }
 
@@ -114,8 +109,25 @@ function run_query(collection_name, query_object) {
     connect_database(db_connected);
 }
 
-
-// Function Authentification
-
-
-
+function insert(collectionName, data){
+	var dbUrl = 'mongodb://'+global.config.mongo.host+':'+global.config.mongo.port+'/'+global.config.mongo.db;
+	MongoClient.connect(dbUrl, function(err, db){
+		if(err){
+			console.log('Connexion to \''+dbUrl+'\' has fail.');
+			console.log(err);
+		}
+		else{
+			db.collection(collectionName).findOne({'username':data.username}, function(err, doc){
+				if(null == doc)
+					db.collection(collectionName).insert(data, function(err, result){
+						if(err)
+							console.log('an error has occured');
+						else
+							console.log('insert done');
+					});
+				else
+					console.log('this user already exists');
+			});
+		}
+	});
+}
