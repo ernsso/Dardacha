@@ -8,6 +8,8 @@
  */
 var http = require('http');
 var fs = require('fs');
+var MongoClient = require('mongodb').MongoClient;
+
 //-- Importation mongoDB
 
 //--------------------------
@@ -26,14 +28,21 @@ var io = require('socket.io').listen(server);
 io.sockets.on('connection', function (socket) {
     console.log('Un client est connecté !');
 	//socket.emit('message', 'Vous êtes bien connecté !');
+	
 	socket.on('login',function(user){
 		//console.log(user);
+
         //-------- ------Requette BD
-        if(Authentification('modfdi','moi')==true)
+        if(Authentification(user.username,user.password)==true)
         {
             console.log('OK');
-			socket.emit('loginSuccess', {success:true, redirectUrl:'../Client/home.html'});
+
+
         }
+   //  -----------------------------
+
+
+
 	});
 	
 	socket.on('signup',function(user){
@@ -44,6 +53,7 @@ io.sockets.on('connection', function (socket) {
 
 server.listen(8080);
 
+
 //------------------------------------
 /**
  * Created by server-pc on 06/05/14.
@@ -52,28 +62,14 @@ server.listen(8080);
 
 function Authentification( _username, _password)
 {
-    var MongoClient = require('mongodb').MongoClient;
-	// Call our 'run_query' function to find all documents in the
-	// 'users' collection with a field 'age' greater than 30.
+
+
+// Call our 'run_query' function to find all documents in the
+// 'users' collection with a field 'age' greater than 30.
     run_query('users',{ 'username' : {$eq: _username},'password':{$eq:_password}});
 
-	// Function used to connect to the MongoDB database
-    function connect_database(next) {
-        var db_cli = new MongoClient();
-        var connection_result = function(err,db) {
-            if(!err) {
-                // Call the callback with the new DB object
-                next(null,db);
-            } else {
-                console.log("DB connection failed. Details: " + err.message);
-                next(err);
-            }
-        };
-        var mongo_url = "mongodb://localhost:27017/Dardacha";
-        db_cli.connect(mongo_url,connection_result);
-    };
 
-	// Function used to get a collection object
+// Function used to get a collection object
     function connect_collection(db, collection_name,next_step) {
         var col_connected = function(err,collection) {
             if(!err) {
@@ -90,8 +86,8 @@ function Authentification( _username, _password)
         db.collection(collection_name,col_connected);
     };
 
-	// Function used to connect to the database, select a collection,
-	// run the query, and output the results to the console.
+// Function used to connect to the database, select a collection,
+// run the query, and output the results to the console.
     function run_query(collection_name, query_object) {
         var database;
         // Called for each document in the collection
