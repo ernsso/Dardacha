@@ -43,9 +43,9 @@ $('#chatform').submit(function(event){
 
 // listener, whenever the server emits 'updatechat', this updates the chat body
 socket.on('updatechat', function (username, data) {
-    var currentdate = new Date();
-    var Hours=currentdate.getHours() + ":"+ currentdate.getMinutes() + ":" + currentdate.getSeconds();
-	$('#conversation').append('<b>'+username + ':</b> ' + data + '<p></p>'+Hours+'</p><br>');
+    var Hours = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+  //  var Hours=currentdate.getHours() + ":"+ currentdate.getMinutes() + ":" + currentdate.getSeconds();
+	$('#conversation').append('<tr><td class="td1">'+username + ':</b> ' + data + '</td><td class="td2">'+Hours+'</td><tr>');
 });
 
 socket.on('newUser', function (username) {

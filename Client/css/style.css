@@ -24,6 +24,7 @@ body {
     padding: 0;
     position: relative;
 }
+
 h1{ font-size:28px;}
 h2{ font-size:26px;}
 h3{ font-size:18px;}
@@ -288,5 +289,15 @@ form:after {
     pacity: 0.63;
     border: 9px #8b64d8 dashed;
     margin-top: 87px;
+
+}
+.container #content .td1{
+    text-align: left;
+    width: 90%;
+}
+
+.container #content .td2{
+    text-align: right;
+    width: 1%;
 
 }
