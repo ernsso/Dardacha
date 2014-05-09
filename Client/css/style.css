@@ -67,6 +67,7 @@ form:after {
     position: relative;
     text-align: center;
     text-shadow: 0 1px 0 #fff;
+    margin-top: 138px;
 }
 #content h1 {
     color: #7E7E7E;
@@ -207,7 +208,8 @@ form:after {
     margin: 20px 0 35px 15px;
     position: relative;
     text-shadow: 0 1px 0 rgba(255,255,255,0.5);
-    width: 120px;
+    width: 200px;
+    margin-left: 80px;
 }
 #content form input[type="submit"]:hover {
     background: rgb(254,193,81);
@@ -276,4 +278,15 @@ form:after {
     overflow:auto;
     text-align: left;
     border : solid 2px #ff0000;
+}
+
+ #members{
+
+    float:left;width:100px;
+    height:275pt;
+    padding:10px;
+    pacity: 0.63;
+    border: 9px #8b64d8 dashed;
+    margin-top: 87px;
+
 }
