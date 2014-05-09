@@ -22,6 +22,8 @@ handle["/index.html"] = requestHandlers.index;
 handle["/signup.html"] = requestHandlers.signup;
 handle["/chat.html"] = requestHandlers.chat;
 
+var users = {};
+
 //--------------------------
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(request, response) {
@@ -47,8 +49,10 @@ io.sockets.on('connection', function (socket) {
 	
 	socket.on('login',function(user){
         var success = DB.Authentification(user.username, user.password, function(success){
-			//if(success)
-				//socket.set('pseudo', user.username);
+			if(success){
+				socket.set('pseudo', user.username);
+				addUser(user.username, socket);
+			}
 			socket.emit('loginSuccess', user.username,success);
 			console.log(success?'Authentification success':'Authentification fail');
 
@@ -70,6 +74,14 @@ io.sockets.on('connection', function (socket) {
 });
 
 server.listen(8080);
+
+function addUser(pseudo, socket){
+	users[pseudo] = socket;
+}
+function disconnectUser(pseudo){
+	io.sockets.socket(users[pseudo]).disconnect();
+	users.delete(pseudo);
+}
 
 function encodeHtmlSpecialChar(object){
 	for(var property in object)
