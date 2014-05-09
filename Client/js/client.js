@@ -30,12 +30,9 @@ $('#signupform').submit(function(event){
 // Call to tchatch
 $('#chatform').submit(function(event){
     event.preventDefault();
-
     socket.emit('Packet',{
-
         ID: $('#tagName').text(),
         message: $('#message').val()
-       // password: $('#password').val()
     });
     $('#message').val('');
 });
@@ -44,6 +41,7 @@ $('#chatform').submit(function(event){
 socket.on('updatechat', function (username, data) {
 	$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
 });
+
 // Get Members
 socket.on('getmembers', function (username) {
     $('#member').append('<b>'+username + ':</b>' );
