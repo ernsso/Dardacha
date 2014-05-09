@@ -100,9 +100,13 @@ function addUser(pseudo, socket){
 	users[pseudo] = socket.id;
 }
 function disconnectUser(socket){
-	var username = users.indexOf(socket.id);
+	var username;
+	for(var k in users)
+		if(socket.id == users[k])
+			username = k;
+	console.log(username);
 	socket.emit('userDisconnect', username);
-	users.delete(username);
+	delete users[username];
 }
 
 function encodeHtmlSpecialChar(object){
