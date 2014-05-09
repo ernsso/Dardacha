@@ -48,10 +48,23 @@ socket.on('updatechat', function (username, data) {
 	$('#conversation').append('<b>'+username + ':</b> ' + data + '<p></p>'+Hours+'</p><br>');
 });
 
-// listener, whenever the server emits 'updatechat', this updates the chat body
 socket.on('newUser', function (username) {
-	$('#member').append('<p>'+username+'</p>');
+	addMember(username);
 });
+
+socket.on('userDisconnect', function (username) {
+	$('#conversation').append('<p>'+username+' has left the chat.</p>');
+});
+
+socket.on('sendUsers', function(users){
+	$('#member').empty();
+	for(var user in users)
+		addMember(user);
+});
+
+function addMember(name){
+	$('#member').append('<p>'+name+'</p>');
+}
 
 function getUser(){
 	$('#member').append('<p>'+_username+'</p>');

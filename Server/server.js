@@ -88,16 +88,21 @@ io.sockets.on('connection', function (socket) {
 		console.log(temp);
 		socket.emit('sendUsers', temp);
 	});
+	
+	socket.on('disconnect', function () {
+		disconnectUser(socket);
+    });
 });
 
 server.listen(8080);
 
 function addUser(pseudo, socket){
-	users[pseudo] = socket;
+	users[pseudo] = socket.id;
 }
-function disconnectUser(pseudo){
-	io.sockets.socket(users[pseudo]).disconnect();
-	users.delete(pseudo);
+function disconnectUser(socket){
+	var username = users.indexOf(socket.id);
+	socket.emit('userDisconnect', username);
+	users.delete(username);
 }
 
 function encodeHtmlSpecialChar(object){
