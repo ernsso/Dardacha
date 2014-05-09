@@ -50,12 +50,12 @@ io.sockets.on('connection', function (socket) {
 	socket.on('login',function(user){
         var success = DB.Authentification(user.username, user.password, function(success){
 			if(success){
-				socket.set('pseudo', user.username);
+				console.log(socket);
+				//io.sockets.set('pseudo', user.username);
 				addUser(user.username, socket);
 			}
 			socket.emit('loginSuccess', user.username,success);
 			console.log(success?'Authentification success':'Authentification fail');
-
 		});
 	});
 	

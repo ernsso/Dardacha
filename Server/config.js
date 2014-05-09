@@ -3,7 +3,7 @@ var config = {
 	mongo:{
 		host:'localhost',
 		port:27017,
-		db:'Dardacha'
+		db:'dardacha'
 	}
 };
 module.exports = config;
