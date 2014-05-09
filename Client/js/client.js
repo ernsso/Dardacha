@@ -1,11 +1,13 @@
 /**
  * Created by server-pc on 05/05/14.
  */
-var socket=io.connect("http://localhost:8080");
+var socket=io.connect(location.search);
 var _username=location.search.substring(1).split('=')[1];
 $('#loginform').submit(function(event){
 	event.preventDefault();
+   // alert(location.search)
 	socket.emit('login',{
+
 		username: $('#username').val(),
 		password: $('#password').val()
 	});
