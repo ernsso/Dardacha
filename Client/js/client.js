@@ -51,7 +51,7 @@ socket.on('updatechat', function (username, data) {
 
 function getUser(){
 
-   $('#member').append('<b></b>' );
+    $('#member').append('<b>----------------</b>' );
    $('#member').append('<b>* '+_username + '</b>' );
   // $('#tagName').val('');
 }
