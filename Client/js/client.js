@@ -45,14 +45,16 @@ $('#chatform').submit(function(event){
 
 // listener, whenever the server emits 'updatechat', this updates the chat body
 socket.on('updatechat', function (username, data) {
-	$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
+    var currentdate = new Date();
+    var Hours=currentdate.getHours() + ":"+ currentdate.getMinutes() + ":" + currentdate.getSeconds();
+	$('#conversation').append('<b>'+username + ':</b> ' + data + '<p></p>'+Hours+'</p><br>');
 });
 
 
 function getUser(){
 
-    $('#member').append('<b>----------------</b>' );
-   $('#member').append('<b>* '+_username + '</b>' );
+   // $('#member').append('<b>----------------</b>' );
+   $('#member').append('<tr>* '+_username + '</tr>' );
   // $('#tagName').val('');
 }
 
