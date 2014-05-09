@@ -1,4 +1,5 @@
 var config = {
+	base_dir : '../Client/',
 	mongo:{
 		host:'localhost',
 		port:27017,
