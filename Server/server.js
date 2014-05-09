@@ -7,14 +7,10 @@
  *
  */
 var http = require('http');
-<<<<<<< HEAD
-var fs = require('fs');
-=======
 var url = require("url");
 var ent = require('ent');
 global.config = require('./config.js');
 var router=require('./router.js');
->>>>>>> origin/redirect-and-insert
 var DB=require('./services.js');
 var requestHandlers = require('./requestHandlers.js');
 
@@ -46,34 +42,19 @@ var io = require('socket.io').listen(server);
 
 // Quand on client se connecte, on le note dans la console
 io.sockets.on('connection', function (socket) {
-    console.log('Serveur en ecoute....');
+    console.log('Un client est connecté !');
 	//socket.emit('message', 'Vous êtes bien connecté !');
 	
 	socket.on('login',function(user){
-<<<<<<< HEAD
-        console.log('Un client est connecté !');
-        io.sockets.emit('getmembers', user.username);
-        DB.Authentification(user.username,user.password);
-
-=======
         var success = DB.Authentification(user.username, user.password, function(success){
 			socket.emit('loginSuccess', success);
 			console.log(success?'Authentification success':'Authentification fail');
 		});
->>>>>>> origin/redirect-and-insert
 	});
-
-    socket.on('Packet',function(PackClient){
-        console.log('Un client envoie un message !')
-        console.log(PackClient);
-        // we tell the client to execute 'updatechat' with 2 parameters
-        io.sockets.emit('updatechat', PackClient.ID, PackClient.message);
-
-
-    });
 	
 	socket.on('signup',function(user){
 		user = encodeHtmlSpecialChar(user);
+		DB.insertUser(user.firstname, user.lastname, user.email, user.username, user.password);
 		console.log(user);
 	});
 	
@@ -87,5 +68,8 @@ io.sockets.on('connection', function (socket) {
 
 server.listen(8080);
 
-
-
+function encodeHtmlSpecialChar(object){
+	for(var property in object)
+		object[property] = ent.encode(object[property]);
+	return object;
+}
