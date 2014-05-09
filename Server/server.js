@@ -94,7 +94,7 @@ io.sockets.on('connection', function (socket) {
     });
 });
 
-server.listen(8080);
+server.listen(global.config.port);
 
 function addUser(pseudo, socket){
 	users[pseudo] = socket.id;
