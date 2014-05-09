@@ -98,12 +98,14 @@ server.listen(8080);
 
 function addUser(pseudo, socket){
 	users[pseudo] = socket.id;
+	console.log(Object.keys(users).length);
 }
 function disconnectUser(socket){
 	var username;
 	for(var k in users)
 		if(socket.id == users[k])
 			username = k;
+	console.log(users);
 	console.log(username);
 	socket.emit('userDisconnect', username);
 	delete users[username];

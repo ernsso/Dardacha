@@ -50,6 +50,7 @@ socket.on('updatechat', function (username, data) {
 
 socket.on('newUser', function (username) {
 	addMember(username);
+	$('#conversation').append('<p>'+username+' joined the chat.</p>');
 });
 
 socket.on('userDisconnect', function (username) {
