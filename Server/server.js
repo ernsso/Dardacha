@@ -50,19 +50,27 @@ io.sockets.on('connection', function (socket) {
 	socket.on('login',function(user){
         var success = DB.Authentification(user.username, user.password, function(success){
 			if(success){
-				console.log(socket);
+				console.log(users);
 				//io.sockets.set('pseudo', user.username);
-				addUser(user.username, socket);
+				success = !(user.username in users);
+				if(!success)
+					console.log('the user \''+user.username+'\' is already connected');
+				else{
+					addUser(user.username, socket);
+					socket.broadcast.emit('newUser', user.username);
+				}
 			}
-			socket.emit('loginSuccess', user.username,success);
+			socket.emit('loginSuccess', user.username, success);
 			console.log(success?'Authentification success':'Authentification fail');
 		});
 	});
 	
 	socket.on('signup',function(user){
 		user = encodeHtmlSpecialChar(user);
-		DB.insertUser(user.firstname, user.lastname, user.email, user.username, user.password);
-		console.log(user);
+		DB.insertUser(user, function(success){
+			socket.emit('loginSuccess', user.username, success);
+			console.log(user);
+		});
 	});
 	
 	socket.on('Packet',function(PackClient){
@@ -70,6 +78,15 @@ io.sockets.on('connection', function (socket) {
 		console.log(PackClient);
 		// we tell the client to execute 'updatechat' with 2 parameters
 		io.sockets.emit('updatechat', PackClient.ID, PackClient.message);
+	});
+	
+	socket.on('getUsers',function(){
+		var temp = [];
+		var cursor = users.keys();
+		for(var key in cursor)
+			temp.push(key);
+		console.log(temp);
+		socket.emit('sendUsers', temp);
 	});
 });
 

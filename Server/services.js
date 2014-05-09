@@ -10,8 +10,10 @@ exports.Authentification=function (_username, _password, callback) {
 	});
 }
 
-exports.insertUser = function(_firstname, _lastname, _email, _username, _password){
-	insert('users', {nom:_lastname, prenom:_firstname, email:_email, username:_username, password:_password});
+exports.insertUser = function(user, callback){
+	insert('users', {nom:user.lastname, prenom:user.firstname, email:user.email, username:user.username, password:user.password}, function(success){
+		callback(success);
+	});
 }
 
 function connect(callback) {
@@ -38,15 +40,16 @@ function select(collectionName, where, callback) {
 	});
 }
 
-function insert(collectionName, data){
+function insert(collectionName, data, callback){
 	connect(function(db){
 		db.collection(collectionName).findOne({'username':data.username}, function(err, doc){
 			if(null == doc)
 				db.collection(collectionName).insert(data, function(err, result){
 					if(err)
-						console.log('an error has occured');
+						console.log('Insert has fail : '+err);
 					else
 						console.log('insert done');
+					callback(!err);
 				});
 			else
 				console.log('this user already exists');
