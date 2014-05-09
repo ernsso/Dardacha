@@ -49,8 +49,9 @@ io.sockets.on('connection', function (socket) {
         var success = DB.Authentification(user.username, user.password, function(success){
 			//if(success)
 				//socket.set('pseudo', user.username);
-			socket.emit('loginSuccess', success);
+			socket.emit('loginSuccess', user.username,success);
 			console.log(success?'Authentification success':'Authentification fail');
+
 		});
 	});
 	

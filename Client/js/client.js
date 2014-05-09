@@ -2,7 +2,7 @@
  * Created by server-pc on 05/05/14.
  */
 var socket=io.connect("http://localhost:8080");
-
+var _username=location.search.substring(1).split('=')[1];
 $('#loginform').submit(function(event){
 	event.preventDefault();
 	socket.emit('login',{
@@ -11,9 +11,13 @@ $('#loginform').submit(function(event){
 	});
 });
 
-socket.on('loginSuccess',function(success){
+socket.on('loginSuccess',function(username,success){
 	if(success)
-		window.location.href = 'chat.html';
+    {
+        window.location.href = 'chat.html?username='+username;
+    }
+
+
 });
 
 $('#signupform').submit(function(event){
@@ -31,7 +35,7 @@ $('#signupform').submit(function(event){
 $('#chatform').submit(function(event){
     event.preventDefault();
     socket.emit('Packet',{
-        ID: $('#tagName').text(),
+        ID:_username, // $('#tagName').text(),
         message: $('#message').val()
     });
     $('#message').val('');
@@ -42,8 +46,12 @@ socket.on('updatechat', function (username, data) {
 	$('#conversation').append('<b>'+username + ':</b> ' + data + '<br>');
 });
 
-// Get Members
-socket.on('getmembers', function (username) {
-    $('#member').append('<b>'+username + ':</b>' );
-});
+
+function getUser(){
+
+   $('#member').append('<b>'+_username + '</b>' );
+  // $('#tagName').val('');
+}
+
+
 
