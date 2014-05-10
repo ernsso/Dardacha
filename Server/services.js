@@ -52,7 +52,10 @@ function insert(collectionName, data, callback){
 					callback(!err);
 				});
 			else
-				console.log('this user already exists');
+            {
+                console.log('this user already exists');
+            }
+
 		});
 	});
 }

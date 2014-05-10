@@ -22,8 +22,8 @@ handle["/index.html"] = requestHandlers.index;
 handle["/signup.html"] = requestHandlers.signup;
 handle["/chat.html"] = requestHandlers.chat;
 
-var users = {};
-
+var users = [];
+var AllSocket={};
 //--------------------------
 // Chargement du fichier index.html affiché au client
 var server = http.createServer(function(request, response) {
@@ -50,17 +50,12 @@ io.sockets.on('connection', function (socket) {
 	socket.on('login',function(user){
         var success = DB.Authentification(user.username, user.password, function(success){
 			if(success){
-				console.log(users);
-				//io.sockets.set('pseudo', user.username);
-				success = !(user.username in users);
-				if(!success)
-					console.log('the user \''+user.username+'\' is already connected');
-				else{
-					addUser(user.username, socket);
-					socket.broadcast.emit('newUser', user.username);
-				}
+				console.log(user);
+
 			}
-			socket.emit('loginSuccess', user.username, success);
+            users.push(user.username);
+            socket.broadcast.emit('NewUser',user.username);
+			socket.emit('loginSuccess',users, user.username, success);
 			console.log(success?'Authentification success':'Authentification fail');
 		});
 	});
@@ -68,9 +63,17 @@ io.sockets.on('connection', function (socket) {
 	socket.on('signup',function(user){
 		user = encodeHtmlSpecialChar(user);
 		DB.insertUser(user, function(success){
-			socket.emit('loginSuccess', user.username, success);
-			console.log(user);
+            console.log(success);
+            if(success)
+            {
+
+                socket.emit('loginSuccess', user.username, success);
+                console.log(user);
+            }
+
 		});
+
+
 	});
 	
 	socket.on('Packet',function(PackClient){
@@ -80,36 +83,19 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('updatechat', PackClient.ID, PackClient.message);
 	});
 	
-	socket.on('getUsers',function(){
-		var temp = [];
-		var cursor = users.keys();
-		for(var key in cursor)
-			temp.push(key);
-		console.log(temp);
-		socket.emit('sendUsers', temp);
-	});
+
 	
-	socket.on('disconnect', function () {
-		disconnectUser(socket);
-    });
+
 });
 
 server.listen(global.config.port);
 
-function addUser(pseudo, socket){
-	users[pseudo] = socket.id;
-	console.log(Object.keys(users).length);
-}
-function disconnectUser(socket){
-	var username;
-	for(var k in users)
-		if(socket.id == users[k])
-			username = k;
-	console.log(users);
-	console.log(username);
-	socket.emit('userDisconnect', username);
-	delete users[username];
-}
+setInterval(function(){
+
+
+},3000);
+
+
 
 function encodeHtmlSpecialChar(object){
 	for(var property in object)
