@@ -55,7 +55,7 @@ io.sockets.on('connection', function (socket) {
 			}
             users.push(user.username);
             socket.broadcast.emit('NewUser',user.username);
-			socket.emit('loginSuccess',users, user.username, success);
+			socket.emit('loginSuccess',users, user, success);
 			console.log(success?'Authentification success':'Authentification fail');
 		});
 	});
@@ -79,8 +79,10 @@ io.sockets.on('connection', function (socket) {
 	socket.on('Packet',function(PackClient){
 		console.log('Un client envoie un message !')
 		console.log(PackClient);
+      var  Hours = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
 		// we tell the client to execute 'updatechat' with 2 parameters
-		io.sockets.emit('updatechat', PackClient.ID, PackClient.message);
+		io.sockets.emit('updatechat', PackClient.username, PackClient.message,Hours);
+        DB.storeHistory(PackClient.username,PackClient.message,Hours);
 	});
 	
 

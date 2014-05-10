@@ -9,7 +9,11 @@ exports.Authentification=function (_username, _password, callback) {
 		callback(results.length > 0);
 	});
 }
+exports.storeHistory=function(username,message,heur)
+{
+    storeHistory('history',{username:username,message:message,heur:heur});
 
+}
 exports.insertUser = function(user, callback){
 	insert('users', {nom:user.lastname, prenom:user.firstname, email:user.email, username:user.username, password:user.password}, function(success){
 		callback(success);
@@ -38,6 +42,21 @@ function select(collectionName, where, callback) {
 				callback(docs);
 		});
 	});
+}
+
+function storeHistory(collectionName, data){
+    connect(function(db){
+           db.collection(collectionName).insert(data, function(err, result){
+                    if(err)
+                        console.log('Insert has fail : '+err);
+                    else
+                        console.log('insert done');
+
+                });
+
+
+        });
+
 }
 
 function insert(collectionName, data, callback){

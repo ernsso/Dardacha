@@ -3,6 +3,7 @@
  */
 var socket=io.connect(location.search);
 var _username=location.search.substring(1).split('=')[1];
+
 var users;
 $('#loginform').submit(function(event){
 	event.preventDefault();
@@ -13,10 +14,12 @@ $('#loginform').submit(function(event){
 	});
 });
 
-socket.on('loginSuccess',function(users_,username, success){
+socket.on('loginSuccess',function(users_,user, success){
 	if(success)
     {
-        window.location.href = 'chat.html?username='+username;
+        sessionStorage.setItem("username",user.username);
+       // sessionStorage.setItem("password",user.password);
+        window.location.href = 'chat.html?username='+user.username;
         if(users_.length>0)
         {
             sessionStorage.setItem("NB",users_.length);
@@ -56,16 +59,18 @@ $('#signupform').submit(function(event){
 // Call to tchatch
 $('#chatform').submit(function(event){
     event.preventDefault();
+    //var h=new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
     socket.emit('Packet',{
-        ID:_username, // $('#tagName').text(),
+        username:sessionStorage.getItem("username"),
+       // Hours:Hours,
         message: $('#message').val()
     });
     $('#message').val('');
 });
 
 // listener, whenever the server emits 'updatechat', this updates the chat body
-socket.on('updatechat', function (username, data) {
-    var Hours = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
+socket.on('updatechat', function (username, data,Hours) {
+
     var color= "#"+((1<<24)*Math.random()|0).toString(16);
 	$('#conversation').append('<tr><td class="td1">'+username + ':</b> ' + data + '</td><td class="td2" style="background-color: '+color+';">'+Hours+'</td><tr>');
 });
