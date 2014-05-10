@@ -79,10 +79,12 @@ io.sockets.on('connection', function (socket) {
 	socket.on('Packet',function(PackClient){
 		console.log('Un client envoie un message !')
 		console.log(PackClient);
+        var date_today = new Date();
+        var date=date_today.getDate()+"/"+(date_today.getMonth()+1)+"/"+date_today.getFullYear();
       var  Hours = new Date().toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
 		// we tell the client to execute 'updatechat' with 2 parameters
 		io.sockets.emit('updatechat', PackClient.username, PackClient.message,Hours);
-        DB.storeHistory(PackClient.username,PackClient.message,Hours);
+        DB.storeHistory(PackClient.username,PackClient.message,date+' '+ Hours);
 	});
 	
 
